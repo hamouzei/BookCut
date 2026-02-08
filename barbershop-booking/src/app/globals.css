@@ -1,0 +1,93 @@
+@import "tailwindcss";
+
+/* ============================================
+   💈 Barbershop Booking System - Design System
+   ============================================ */
+
+:root {
+  /* Brand Colors */
+  --color-primary: #d97706;       /* Amber 600 */
+  --color-primary-dark: #b45309;  /* Amber 700 */
+  --color-secondary: #1e293b;     /* Slate 800 */
+  --color-accent: #f59e0b;        /* Amber 500 */
+  
+  /* Neutral Colors */
+  --background: #f8fafc;          /* Slate 50 */
+  --foreground: #0f172a;          /* Slate 900 */
+  --muted: #64748b;               /* Slate 500 */
+  --border: #e2e8f0;              /* Slate 200 */
+  
+  /* Semantic Colors */
+  --success: #10b981;
+  --warning: #f59e0b;
+  --error: #ef4444;
+  --info: #3b82f6;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0f172a;
+    --foreground: #f1f5f9;
+    --border: #334155;
+  }
+}
+
+/* Base Styles */
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--muted);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Focus States */
+*:focus-visible {
+  outline: 2px solid var(--color-primary);
+  outline-offset: 2px;
+}
+
+/* Link Styles */
+a {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--color-primary-dark);
+}
+
+/* Selection */
+::selection {
+  background: var(--color-primary);
+  color: white;
+}
