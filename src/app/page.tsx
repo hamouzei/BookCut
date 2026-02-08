@@ -3,19 +3,6 @@ import { Button } from "@/components/ui";
 export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50">
-      {/* Header */}
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex justify-between items-center">
-          <div className="flex items-center gap-2">
-            <span className="text-2xl">💈</span>
-            <span className="text-xl font-bold text-slate-900">Barbershop</span>
-          </div>
-          <nav className="flex items-center gap-4">
-            <a href="/login" className="text-slate-600 hover:text-amber-600 transition-colors">Login</a>
-            <Button size="sm">Book Now</Button>
-          </nav>
-        </div>
-      </header>
 
       {/* Hero Section */}
       <main className="max-w-6xl mx-auto px-4 py-16">
