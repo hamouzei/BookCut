@@ -68,7 +68,7 @@ export default function MyBookingsPage() {
           <Card className="p-12 text-center">
             <div className="text-5xl mb-4 text-slate-300">📅</div>
             <h2 className="text-xl font-semibold text-slate-900 mb-2">No bookings yet</h2>
-            <p className="text-slate-600 mb-6">You haven't scheduled any appointments yet.</p>
+            <p className="text-slate-600 mb-6">You haven&apos;t scheduled any appointments yet.</p>
             <Link href="/book">
               <Button>Book Your First Appointment</Button>
             </Link>

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { neon, NeonQueryFunction } from '@neondatabase/serverless';
 
 // Lazy-loaded SQL function - only creates connection when first used

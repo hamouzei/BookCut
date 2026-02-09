@@ -2,7 +2,7 @@
 
 import { useSession } from '@/lib/auth/client';
 import { useRouter, usePathname } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui';
 
@@ -15,7 +15,6 @@ export default function AdminLayout({
   const session = sessionData as typeof sessionData & { user: { role: string } } | null;
   const router = useRouter();
   const pathname = usePathname();
-  const [isAuthorized, setIsAuthorized] = useState(false);
 
   useEffect(() => {
     if (!isPending) {
@@ -23,11 +22,11 @@ export default function AdminLayout({
         router.push('/login?redirect=' + pathname);
       } else if (session.user.role !== 'admin' && session.user.role !== 'barber') {
         router.push('/');
-      } else {
-        setIsAuthorized(true);
       }
     }
   }, [session, isPending, router, pathname]);
+
+  const isAuthorized = !isPending && session && (session.user.role === 'admin' || session.user.role === 'barber');
 
   if (isPending || !isAuthorized) {
     return (

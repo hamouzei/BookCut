@@ -43,7 +43,7 @@ export default function BookingConfirmationPage() {
       <div className="min-h-screen flex items-center justify-center bg-slate-50">
         <Card className="p-8 text-center max-w-md">
           <h1 className="text-2xl font-bold text-slate-900 mb-4">Booking Not Found</h1>
-          <p className="text-slate-600 mb-6">We couldn't find the booking you're looking for.</p>
+          <p className="text-slate-600 mb-6">We couldn&apos;t find the booking you&apos;re looking for.</p>
           <Link href="/">
             <Button>Back to Home</Button>
           </Link>

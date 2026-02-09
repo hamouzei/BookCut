@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 'use client';
 
 import { useEffect, useState } from 'react';
@@ -25,7 +26,7 @@ export default function AdminDashboard() {
         if (res.ok) {
             const data = await res.json();
             const today = new Date().toISOString().split('T')[0];
-            const bookings = data.data || [];
+            const bookings: any[] = data.data || [];
             
             setStats({
                 todayBookings: bookings.filter((b: any) => b.date === today).length,
