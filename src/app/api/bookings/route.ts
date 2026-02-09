@@ -119,6 +119,22 @@ export async function POST(request: Request) {
       notes,
     });
 
+    // Send Confirmation Email (Async - don't block response)
+    (async () => {
+      try {
+        const { sendEmail } = await import('@/lib/email');
+        const { getBookingConfirmationTemplate } = await import('@/lib/email/templates');
+
+        await sendEmail({
+          to: customerEmail,
+          subject: 'Booking Confirmed - Barbershop',
+          html: getBookingConfirmationTemplate(booking),
+        });
+      } catch (emailError) {
+        console.error('Failed to send confirmation email', emailError);
+      }
+    })();
+
     return NextResponse.json({ success: true, data: booking }, { status: 201 });
   } catch (error) {
     console.error('Error creating booking:', error);

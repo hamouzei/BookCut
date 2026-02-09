@@ -11,7 +11,8 @@ export default function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { data: session, isPending } = useSession();
+  const { data: sessionData, isPending } = useSession();
+  const session = sessionData as typeof sessionData & { user: { role: string } } | null;
   const router = useRouter();
   const pathname = usePathname();
   const [isAuthorized, setIsAuthorized] = useState(false);
@@ -71,6 +72,7 @@ export default function AdminLayout({
           })}
         </nav>
         <div className="absolute bottom-0 w-64 p-4 border-t border-slate-800">
+           {session?.user && (
            <div className="flex items-center gap-3 mb-4">
               <div className="h-8 w-8 rounded-full bg-amber-500 flex items-center justify-center text-xs font-bold">
                 {session.user.name?.charAt(0)}
@@ -80,6 +82,7 @@ export default function AdminLayout({
                 <p className="text-xs text-slate-500 truncate capitalize">{session.user.role}</p>
               </div>
            </div>
+           )}
            <Button 
              variant="outline" 
              className="w-full border-slate-700 text-slate-300 hover:bg-slate-800 hover:text-white"
