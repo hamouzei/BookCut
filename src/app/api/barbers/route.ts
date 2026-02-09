@@ -1,5 +1,7 @@
 import { NextResponse } from 'next/server';
 import { getBarbers, createBarber } from '@/lib/db/barbers';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -21,6 +23,17 @@ export async function GET() {
 // POST /api/barbers - Create a new barber (admin only)
 export async function POST(request: Request) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
+    if (!session || session.user.role !== 'admin') {
+      return NextResponse.json(
+        { success: false, error: 'Unauthorized' },
+        { status: 401 }
+      );
+    }
+
     const body = await request.json();
     const { name, email, phone, bio, workingHours } = body;
 
