@@ -177,11 +177,12 @@ export async function isSlotAvailable(
   return blocked.length === 0;
 }
 
-// Get all bookings for admin (with pagination)
+// Get all bookings for admin (with pagination) or list for a user
 export async function getAllBookings(
   page: number = 1,
   limit: number = 20,
-  status?: BookingStatus
+  status?: BookingStatus,
+  userEmail?: string
 ): Promise<{ bookings: Booking[]; total: number }> {
   const sql = getSql();
   const offset = (page - 1) * limit;
@@ -189,13 +190,20 @@ export async function getAllBookings(
   let bookings;
   let totalResult;
 
-  if (status) {
+  if (status && userEmail) {
     bookings = await sql`
-      SELECT 
-        b.id, b.user_id, b.barber_id, b.service_id,
-        b.customer_name, b.customer_email, b.customer_phone,
-        b.date, b.start_time, b.end_time, b.status, b.notes, b.created_at,
-        s.name as service_name, br.name as barber_name
+      SELECT b.*, s.name as service_name, br.name as barber_name
+      FROM bookings b
+      LEFT JOIN services s ON b.service_id = s.id
+      LEFT JOIN barbers br ON b.barber_id = br.id
+      WHERE b.status = ${status} AND b.customer_email = ${userEmail}
+      ORDER BY b.date DESC, b.start_time DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `;
+    totalResult = await sql`SELECT COUNT(*) as count FROM bookings WHERE status = ${status} AND customer_email = ${userEmail}`;
+  } else if (status) {
+    bookings = await sql`
+      SELECT b.*, s.name as service_name, br.name as barber_name
       FROM bookings b
       LEFT JOIN services s ON b.service_id = s.id
       LEFT JOIN barbers br ON b.barber_id = br.id
@@ -204,13 +212,20 @@ export async function getAllBookings(
       LIMIT ${limit} OFFSET ${offset}
     `;
     totalResult = await sql`SELECT COUNT(*) as count FROM bookings WHERE status = ${status}`;
+  } else if (userEmail) {
+    bookings = await sql`
+      SELECT b.*, s.name as service_name, br.name as barber_name
+      FROM bookings b
+      LEFT JOIN services s ON b.service_id = s.id
+      LEFT JOIN barbers br ON b.barber_id = br.id
+      WHERE b.customer_email = ${userEmail}
+      ORDER BY b.date DESC, b.start_time DESC
+      LIMIT ${limit} OFFSET ${offset}
+    `;
+    totalResult = await sql`SELECT COUNT(*) as count FROM bookings WHERE customer_email = ${userEmail}`;
   } else {
     bookings = await sql`
-      SELECT 
-        b.id, b.user_id, b.barber_id, b.service_id,
-        b.customer_name, b.customer_email, b.customer_phone,
-        b.date, b.start_time, b.end_time, b.status, b.notes, b.created_at,
-        s.name as service_name, br.name as barber_name
+      SELECT b.*, s.name as service_name, br.name as barber_name
       FROM bookings b
       LEFT JOIN services s ON b.service_id = s.id
       LEFT JOIN barbers br ON b.barber_id = br.id
@@ -220,8 +235,27 @@ export async function getAllBookings(
     totalResult = await sql`SELECT COUNT(*) as count FROM bookings`;
   }
 
+  // Map result rows to ensure correct field names (handles camelCase vs snake_case if needed)
+  const mappedBookings = (bookings || []).map(row => ({
+    id: row.id,
+    userId: row.user_id,
+    barberId: row.barber_id,
+    serviceId: row.service_id,
+    customerName: row.customer_name,
+    customerEmail: row.customer_email,
+    customerPhone: row.customer_phone,
+    date: row.date,
+    startTime: row.start_time,
+    endTime: row.end_time,
+    status: row.status as BookingStatus,
+    notes: row.notes,
+    createdAt: row.created_at,
+    serviceName: row.service_name,
+    barberName: row.barber_name
+  })) as Booking[];
+
   return {
-    bookings: bookings as Booking[],
+    bookings: mappedBookings,
     total: Number(totalResult[0].count),
   };
 }

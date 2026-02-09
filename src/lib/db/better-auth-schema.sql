@@ -1,7 +1,5 @@
 -- Better Auth Required Tables (CamelCase)
 -- Run this in your Neon database SQL Editor
--- NOTE: If tables already exist, DROP them first or rename columns.
--- Recommended: DROP TABLE IF EXISTS "user", "session", "account", "verification" CASCADE;
 
 DROP TABLE IF EXISTS "user" CASCADE;
 DROP TABLE IF EXISTS "session" CASCADE;
@@ -16,24 +14,26 @@ CREATE TABLE "user" (
   "emailVerified" BOOLEAN DEFAULT false,
   "image" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
+  "role" TEXT DEFAULT 'user',
+  "phone" TEXT
 );
 
 -- Session table
 CREATE TABLE "session" (
   "id" TEXT PRIMARY KEY,
-  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
   "expiresAt" TIMESTAMP NOT NULL,
+  "token" TEXT UNIQUE NOT NULL,
+  "createdAt" TIMESTAMP DEFAULT NOW(),
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
   "ipAddress" TEXT,
   "userAgent" TEXT,
-  "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE
 );
 
 -- Account table
 CREATE TABLE "account" (
   "id" TEXT PRIMARY KEY,
-  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE,
   "accountId" TEXT NOT NULL,
   "providerId" TEXT NOT NULL,
   "accessToken" TEXT,
@@ -44,7 +44,8 @@ CREATE TABLE "account" (
   "idToken" TEXT,
   "password" TEXT,
   "createdAt" TIMESTAMP DEFAULT NOW(),
-  "updatedAt" TIMESTAMP DEFAULT NOW()
+  "updatedAt" TIMESTAMP DEFAULT NOW(),
+  "userId" TEXT NOT NULL REFERENCES "user"("id") ON DELETE CASCADE
 );
 
 -- Verification table

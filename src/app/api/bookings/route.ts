@@ -1,6 +1,8 @@
 import { NextResponse } from 'next/server';
 import { createBooking, getAllBookings, isSlotAvailable } from '@/lib/db/bookings';
 import { getServiceById } from '@/lib/db/services';
+import { auth } from '@/lib/auth';
+import { headers } from 'next/headers';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -8,12 +10,22 @@ export const dynamic = 'force-dynamic';
 // GET /api/bookings - Get all bookings (admin) or user bookings
 export async function GET(request: Request) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '20');
     const status = searchParams.get('status') as 'pending' | 'confirmed' | 'cancelled' | 'completed' | null;
 
-    const result = await getAllBookings(page, limit, status || undefined);
+    // If regular user, only show their bookings
+    let userEmail = undefined;
+    if (session?.user && session.user.role !== 'admin') {
+      userEmail = session.user.email;
+    }
+
+    const result = await getAllBookings(page, limit, status || undefined, userEmail);
     return NextResponse.json({
       success: true,
       data: result.bookings,
@@ -36,22 +48,28 @@ export async function GET(request: Request) {
 // POST /api/bookings - Create a new booking
 export async function POST(request: Request) {
   try {
+    const session = await auth.api.getSession({
+      headers: await headers()
+    });
+
     const body = await request.json();
     const {
       barberId,
       serviceId,
-      customerName,
-      customerEmail,
       customerPhone,
       date,
       startTime,
       notes
     } = body;
 
+    // Use session user details if available, otherwise require from body
+    const customerName = body.customerName || session?.user?.name;
+    const customerEmail = body.customerEmail || session?.user?.email;
+
     // Validate required fields
     if (!barberId || !serviceId || !customerName || !customerEmail || !date || !startTime) {
       return NextResponse.json(
-        { success: false, error: 'Missing required fields' },
+        { success: false, error: 'Missing required fields (barberId, serviceId, customerName, customerEmail, date, or startTime)' },
         { status: 400 }
       );
     }
