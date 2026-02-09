@@ -1,12 +1,14 @@
 import { betterAuth } from "better-auth";
+import { Pool } from "pg";
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
 
 export const auth = betterAuth({
-  database: {
-    provider: "pg",
-    url: process.env.DATABASE_URL!,
-  },
+  database: pool,
   emailAndPassword: {
-    enabled: false, // We're using Google OAuth only
+    enabled: false,
   },
   socialProviders: {
     google: {
@@ -16,10 +18,6 @@ export const auth = betterAuth({
   },
   session: {
     expiresIn: 60 * 60 * 24 * 7, // 7 days
-    updateAge: 60 * 60 * 24, // Update session every 24 hours
-    cookieCache: {
-      enabled: true,
-      maxAge: 5 * 60, // 5 minutes
-    },
+    updateAge: 60 * 60 * 24, // 1 day
   },
 });

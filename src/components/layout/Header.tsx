@@ -8,37 +8,33 @@ import { authClient } from '@/lib/auth/client';
 
 export function Header() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const router = useRouter();
 
   useEffect(() => {
     async function fetchSession() {
       try {
-        const session = await authClient.getSession();
-        if (session?.data?.user) {
+        const { data } = await authClient.getSession();
+        if (data?.user) {
           setUser({
-            name: session.data.user.name || session.data.user.email?.split('@')[0] || 'User',
-            email: session.data.user.email || '',
+            name: data.user.name || data.user.email?.split('@')[0] || 'User',
+            email: data.user.email || '',
           });
         }
-      } catch (err) {
-        console.error('Failed to fetch session');
+      } catch (e) {
+        console.error("Session error:", e);
       } finally {
-        setIsLoading(false);
+        setLoading(false);
       }
     }
     fetchSession();
   }, []);
 
   const handleLogout = async () => {
-    try {
-      await authClient.signOut();
-      setUser(null);
-      router.push('/');
-      router.refresh();
-    } catch (err) {
-      console.error('Logout failed');
-    }
+    await authClient.signOut();
+    setUser(null);
+    router.push('/');
+    router.refresh();
   };
 
   return (
@@ -66,10 +62,13 @@ export function Header() {
                 My Bookings
               </Link>
             )}
+            <Link href="/admin" className="text-slate-900 font-bold hover:text-amber-600 transition-colors">
+                Admin
+            </Link>
           </nav>
 
           <div className="flex items-center space-x-4">
-            {!isLoading && (
+            {!loading && (
               <>
                 {user ? (
                   <div className="flex items-center space-x-4">
