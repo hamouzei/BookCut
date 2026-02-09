@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server';
-import { createBooking, getAllBookings, isSlotAvailable } from '@/lib/db/bookings';
+import { createBooking, getAllBookings } from '@/lib/db/bookings';
 import { getServiceById } from '@/lib/db/services';
 import { auth } from '@/lib/auth';
 import { headers } from 'next/headers';
+import { validateSlotAvailability } from '@/lib/engine/availability';
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic';
@@ -90,11 +91,17 @@ export async function POST(request: Request) {
     const endMins = endMinutes % 60;
     const endTime = `${endHours.toString().padStart(2, '0')}:${endMins.toString().padStart(2, '0')}`;
 
-    // Check slot availability
-    const available = await isSlotAvailable(barberId, date, startTime, endTime);
-    if (!available) {
+    // Check slot availability (using strict engine validation)
+    const validation = await validateSlotAvailability({
+      barberId,
+      date,
+      startTime,
+      serviceId
+    });
+
+    if (!validation.isValid) {
       return NextResponse.json(
-        { success: false, error: 'This time slot is no longer available' },
+        { success: false, error: validation.error || 'This time slot is no longer available' },
         { status: 409 }
       );
     }
