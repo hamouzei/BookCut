@@ -95,7 +95,7 @@ export async function createBooking(data: {
     VALUES (
       ${data.userId || null}, ${data.barberId}, ${data.serviceId},
       ${data.customerName}, ${data.customerEmail}, ${data.customerPhone || null},
-      ${data.date}, ${data.startTime}, ${data.endTime}, ${data.notes || null}, 'confirmed'
+      ${data.date}, ${data.startTime}, ${data.endTime}, ${data.notes || null}, 'pending'
     )
     RETURNING id, user_id, barber_id, service_id, customer_name, customer_email, 
               customer_phone, date, start_time, end_time, status, notes, created_at

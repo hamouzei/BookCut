@@ -7,11 +7,12 @@ import { Button } from '@/components/ui';
 interface TimeSlotPickerProps {
   date: Date;
   serviceId: number;
+  barberId?: number | null;
   selectedTime: string | null;
   onSelect: (time: string) => void;
 }
 
-export function TimeSlotPicker({ date, serviceId, selectedTime, onSelect }: TimeSlotPickerProps) {
+export function TimeSlotPicker({ date, serviceId, barberId, selectedTime, onSelect }: TimeSlotPickerProps) {
   const [slots, setSlots] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
@@ -22,26 +23,35 @@ export function TimeSlotPicker({ date, serviceId, selectedTime, onSelect }: Time
       setError('');
       try {
         const dateStr = format(date, 'yyyy-MM-dd');
-        const res = await fetch(`/api/availability?date=${dateStr}&serviceId=${serviceId}`);
+        let url = `/api/availability?date=${dateStr}&serviceId=${serviceId}`;
+        if (barberId) {
+            url += `&barberId=${barberId}`;
+        }
+
+        const res = await fetch(url);
         const data = await res.json();
         
         if (data.success) {
-          // Flatten slots from all barbers for now, or just show available times
-          // This depends on API response structure. 
-          // Assuming API returns { barberId: { "09:00": true, ... } } or similar
-          // Let's assume a simpler array for now based on previous `route.ts` analysis if possible
-          // Checking `src/app/api/availability/route.ts`...
-          // It returns `Record<number, TimeSlot[]>` (barberId -> slots).
-          
-          // Let's aggregate all unique available times across all barbers
           const allSlots = new Set<string>();
-          Object.values(data.data as Record<string, { time: string; available: boolean }[]>).forEach(barberSlots => {
-            barberSlots.forEach(slot => {
-              if (slot.available) {
-                allSlots.add(slot.time);
-              }
+          
+          if (barberId) {
+            // Response is { barber: ..., slots: [...] }
+            const responseData = data.data as { slots: { time: string; available: boolean }[] };
+            if (responseData.slots && Array.isArray(responseData.slots)) {
+                responseData.slots.forEach(slot => {
+                    if (slot.available) allSlots.add(slot.time);
+                });
+            }
+          } else {
+            // Response is Record<barberId, slots[]>
+            Object.values(data.data as Record<string, { time: string; available: boolean }[]>).forEach(barberSlots => {
+                barberSlots.forEach(slot => {
+                if (slot.available) {
+                    allSlots.add(slot.time);
+                }
+                });
             });
-          });
+          }
           
           setSlots(Array.from(allSlots).sort());
         } else {
@@ -58,7 +68,7 @@ export function TimeSlotPicker({ date, serviceId, selectedTime, onSelect }: Time
     if (date && serviceId) {
       fetchSlots();
     }
-  }, [date, serviceId]);
+  }, [date, serviceId, barberId]);
 
   if (isLoading) return <div className="text-center py-8">Loading available times...</div>;
   if (error) return <div className="text-center py-8 text-red-500">{error}</div>;

@@ -5,10 +5,11 @@ import { useRouter } from 'next/navigation';
 import { Button, Card } from '@/components/ui';
 import { useSession } from '@/lib/auth/client';
 import { ServiceSelection } from '@/components/booking/ServiceSelection';
+import { BarberSelection } from '@/components/booking/BarberSelection';
 import { DateCalendar } from '@/components/booking/DateCalendar';
 import { TimeSlotPicker } from '@/components/booking/TimeSlotPicker';
 import { BookingSummary } from '@/components/booking/BookingSummary';
-import { Service } from '@/types';
+import { Service, Barber } from '@/types';
 
 export default function BookingPage() {
   const [step, setStep] = useState(1);
@@ -17,7 +18,7 @@ export default function BookingPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState({
     serviceId: null as number | null,
-    barberId: null as number | null, // Made optional/nullable in logic
+    barberId: null as number | null,
     date: null as Date | null,
     time: null as string | null,
   });
@@ -31,20 +32,16 @@ export default function BookingPage() {
       return;
     }
 
+    if (!bookingData.barberId) {
+        alert('Please select a barber');
+        return;
+    }
+
     setIsSubmitting(true);
     try {
-      // Assuming barberId 1 for now if not selected (or implement logic to pick one)
-      // Since availability logic aggregates slots, we might need to pick an available barber for that slot
-      // For simplicity, let's just send the booking request and let backend assign or fail if we didn't pick one.
-      // But wait, our API expects barberId?
-      // "POST /api/bookings" usually requires barberId.
-      // Let's check api/bookings/route.ts. 
-      // If we don't have a barberId, we might need to fetch available barber for this slot.
-      // Simplification: Auto-assign barber ID 1 or fix backend to handle "any barber".
-      // Let's default to barberId 1 for MVP if not set.
       const payload = {
         serviceId: bookingData.serviceId,
-        barberId: bookingData.barberId || 1, 
+        barberId: bookingData.barberId, 
         date: bookingData.date?.toISOString().split('T')[0], // YYYY-MM-DD
         startTime: bookingData.time,
       };
@@ -76,12 +73,12 @@ export default function BookingPage() {
       <div className="max-w-3xl mx-auto">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-slate-900">Book Appointment</h1>
-          <p className="mt-2 text-slate-600">Step {step} of 4</p>
+          <p className="mt-2 text-slate-600">Step {step} of 5</p>
           {/* Progress Bar */}
           <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
             <div 
               className="h-full bg-amber-500 transition-all duration-300 ease-in-out"
-              style={{ width: `${(step / 4) * 100}%` }}
+              style={{ width: `${(step / 5) * 100}%` }}
             />
           </div>
         </div>
@@ -102,6 +99,20 @@ export default function BookingPage() {
 
           {step === 2 && (
             <div>
+              <h2 className="text-xl font-semibold mb-4">Select Barber</h2>
+              <BarberSelection 
+                  selectedId={bookingData.barberId} 
+                  onSelect={(barber: Barber) => setBookingData({...bookingData, barberId: barber.id})} 
+              />
+              <div className="mt-6 flex justify-between">
+                <Button variant="outline" onClick={prevStep}>Back</Button>
+                <Button onClick={nextStep} disabled={!bookingData.barberId}>Next</Button>
+              </div>
+            </div>
+          )}
+
+          {step === 3 && (
+            <div>
               <h2 className="text-xl font-semibold mb-4">Select Date</h2>
               <div className="flex justify-center">
                 <DateCalendar 
@@ -116,12 +127,14 @@ export default function BookingPage() {
             </div>
           )}
           
-          {step === 3 && (
+          {step === 4 && (
             <div>
               <h2 className="text-xl font-semibold mb-4">Select Time</h2>
+              <p className="text-sm text-slate-500 mb-4">Showing available slots for your selected barber.</p>
               <TimeSlotPicker 
                 date={bookingData.date!}
                 serviceId={bookingData.serviceId!}
+                barberId={bookingData.barberId}
                 selectedTime={bookingData.time}
                 onSelect={(time: string) => setBookingData({...bookingData, time})}
               />
@@ -132,7 +145,7 @@ export default function BookingPage() {
             </div>
           )}
 
-          {step === 4 && (
+          {step === 5 && (
              <div>
                <h2 className="text-xl font-semibold mb-4">Confirm Booking</h2>
                <BookingSummary 

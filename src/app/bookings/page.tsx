@@ -109,6 +109,31 @@ export default function MyBookingsPage() {
                   </div>
                   
                   <div className="mt-4 sm:mt-0 flex items-center gap-3">
+                    {booking.status === 'confirmed' && (
+                       <Button 
+                        size="sm" 
+                        className="bg-green-600 hover:bg-green-700 text-white"
+                        onClick={async () => {
+                            if (!confirm('Mark this appointment as completed?')) return;
+                            try {
+                                const res = await fetch(`/api/bookings/${booking.id}`, {
+                                    method: 'PATCH',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ status: 'completed' })
+                                });
+                                if (res.ok) {
+                                    // Refresh list
+                                    const refreshed = await fetch('/api/bookings').then(r => r.json());
+                                    if (refreshed.success) setBookings(refreshed.data);
+                                }
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        }}
+                       >
+                        Mark Complete
+                       </Button>
+                    )}
                     <Link href={`/bookings/${booking.id}/confirmation`}>
                       <Button variant="outline" size="sm">Details</Button>
                     </Link>

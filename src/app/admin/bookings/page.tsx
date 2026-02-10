@@ -140,7 +140,29 @@ export default function AdminBookingsPage() {
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <a href={`/bookings/${booking.id}/confirmation`} target="_blank" className="text-amber-600 hover:text-amber-900">View</a>
+                      <Button 
+                        disabled={booking.status !== 'pending'}
+                        variant={booking.status === 'pending' ? 'primary' : 'ghost'}
+                        size="sm"
+                        onClick={async () => {
+                            if (booking.status !== 'pending') return;
+                            if (!confirm('Confirm this booking?')) return;
+                            
+                            try {
+                                const res = await fetch(`/api/bookings/${booking.id}`, {
+                                    method: 'PATCH',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({ status: 'confirmed' })
+                                });
+                                if (res.ok) fetchBookings();
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        }}
+                      >
+                        {booking.status === 'pending' ? 'Confirm' : 'Details'}
+                      </Button>
+                      <a href={`/bookings/${booking.id}/confirmation`} target="_blank" className="text-amber-600 hover:text-amber-900 ml-2 text-sm font-medium">View</a>
                     </td>
                   </tr>
                 ))
