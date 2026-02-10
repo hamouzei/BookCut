@@ -1,3 +1,4 @@
+import Link from 'next/link';
 import { Button } from "@/components/ui";
 
 export default function Home() {
@@ -15,8 +16,12 @@ export default function Home() {
             Skip the wait. Book your appointment online and get the style you deserve from our expert barbers.
           </p>
           <div className="flex justify-center gap-4">
-            <Button size="lg">Book Appointment</Button>
-            <Button variant="outline" size="lg">View Services</Button>
+            <Link href="/book">
+              <Button size="lg">Book Appointment</Button>
+            </Link>
+            <Link href="/#services">
+              <Button variant="outline" size="lg">View Services</Button>
+            </Link>
           </div>
         </div>
 
@@ -58,9 +63,11 @@ export default function Home() {
           <p className="text-slate-300 mb-6">
             Book your first appointment today and experience the difference.
           </p>
-          <Button size="lg" className="bg-amber-500 hover:bg-amber-600">
-            Book Your Appointment
-          </Button>
+          <Link href="/book">
+            <Button size="lg" className="bg-amber-500 hover:bg-amber-600">
+              Book Your Appointment
+            </Button>
+          </Link>
         </div>
       </main>
 

@@ -7,7 +7,7 @@ import { Button } from '@/components/ui';
 import { authClient } from '@/lib/auth/client';
 
 export function Header() {
-  const [user, setUser] = useState<{ name: string; email: string } | null>(null);
+  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
 
@@ -19,6 +19,7 @@ export function Header() {
           setUser({
             name: data.user.name || data.user.email?.split('@')[0] || 'User',
             email: data.user.email || '',
+            role: (data.user as any).role || 'user',
           });
         }
       } catch (e) {
@@ -62,9 +63,11 @@ export function Header() {
                 My Bookings
               </Link>
             )}
-            <Link href="/admin" className="text-slate-900 font-bold hover:text-amber-600 transition-colors">
-                Admin
-            </Link>
+            {user?.role === 'admin' && (
+              <Link href="/admin" className="text-slate-900 font-bold hover:text-amber-600 transition-colors">
+                  Admin
+              </Link>
+            )}
           </nav>
 
           <div className="flex items-center space-x-4">
