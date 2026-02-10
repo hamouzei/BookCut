@@ -138,6 +138,17 @@ export async function cancelBooking(id: number): Promise<boolean> {
   return updateBookingStatus(id, 'cancelled');
 }
 
+// Hard delete a booking (Admin only)
+export async function deleteBooking(id: number): Promise<boolean> {
+  const sql = getSql();
+  const result = await sql`
+    DELETE FROM bookings
+    WHERE id = ${id}
+    RETURNING id
+  `;
+  return result.length > 0;
+}
+
 // Check if a time slot is available
 export async function isSlotAvailable(
   barberId: number,

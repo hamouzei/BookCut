@@ -162,6 +162,25 @@ export default function AdminBookingsPage() {
                       >
                         {booking.status === 'pending' ? 'Confirm' : 'Details'}
                       </Button>
+                      <Button 
+                        variant="ghost"
+                        size="sm"
+                        className="text-red-600 hover:text-red-900 hover:bg-red-50 ml-1"
+                        onClick={async () => {
+                            if (!confirm('Are you sure you want to PERMANENTLY delete this booking? This cannot be undone.')) return;
+                            
+                            try {
+                                const res = await fetch(`/api/bookings/${booking.id}`, {
+                                    method: 'DELETE',
+                                });
+                                if (res.ok) fetchBookings();
+                            } catch (e) {
+                                console.error(e);
+                            }
+                        }}
+                      >
+                        Delete
+                      </Button>
                       <a href={`/bookings/${booking.id}/confirmation`} target="_blank" className="text-amber-600 hover:text-amber-900 ml-2 text-sm font-medium">View</a>
                     </td>
                   </tr>

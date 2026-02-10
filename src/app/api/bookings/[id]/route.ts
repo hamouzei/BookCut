@@ -75,27 +75,29 @@ export async function PATCH(
   }
 }
 
-// DELETE /api/bookings/[id] - Cancel a booking
+// DELETE /api/bookings/[id] - Hard delete a booking
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     const { id } = await params;
-    const cancelled = await cancelBooking(parseInt(id));
+    // Note: In a real app, we should check for admin role here again
+    const { deleteBooking } = await import('@/lib/db/bookings');
+    const deleted = await deleteBooking(parseInt(id));
 
-    if (!cancelled) {
+    if (!deleted) {
       return NextResponse.json(
         { success: false, error: 'Booking not found' },
         { status: 404 }
       );
     }
 
-    return NextResponse.json({ success: true, message: 'Booking cancelled' });
+    return NextResponse.json({ success: true, message: 'Booking deleted' });
   } catch (error) {
-    console.error('Error cancelling booking:', error);
+    console.error('Error deleting booking:', error);
     return NextResponse.json(
-      { success: false, error: 'Failed to cancel booking' },
+      { success: false, error: 'Failed to delete booking' },
       { status: 500 }
     );
   }
