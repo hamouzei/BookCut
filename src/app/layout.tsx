@@ -5,6 +5,9 @@ import { Header } from "@/components/layout/Header";
 export const metadata: Metadata = {
   title: "BookCut | Barbershop Booking System",
   description: "Book your perfect haircut with ease. Professional barbers, seamless scheduling.",
+  icons: {
+    icon: "/image.svg",
+  },
 };
 
 export default function RootLayout({

@@ -43,8 +43,14 @@ export function Header() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center">
-            <Link href="/" className="flex items-center space-x-2">
-              <span className="text-2xl">💈</span>
+            <Link href="/" className="flex items-center space-x-3 group">
+              <div className="relative h-8 w-8 overflow-hidden rounded-md">
+                <img 
+                  src="/image.svg" 
+                  alt="BookCut Logo" 
+                  className="h-full w-full object-contain group-hover:scale-110 transition-transform"
+                />
+              </div>
               <span className="text-xl font-bold text-slate-900 tracking-tight">
                 Book<span className="text-amber-600">Cut</span>
               </span>
