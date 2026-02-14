@@ -6,11 +6,15 @@ export async function middleware(request: NextRequest) {
 
   // Define protected routes that require authentication
   const isAdminRoute = pathname.startsWith('/admin');
-  const isProtectedRoute = pathname.startsWith('/bookings') || pathname.startsWith('/book');
+  const isProtectedRoute = pathname.startsWith('/bookings');
   const isAuthRoute = pathname.startsWith('/login');
 
-  // Get session cookie (Better Auth uses 'better-auth.session_token')
-  const sessionToken = request.cookies.get('better-auth.session_token')?.value;
+  // Get session cookie - Better Auth uses different names for HTTP vs HTTPS
+  // In production (HTTPS): '__Secure-better-auth.session_token'
+  // In development (HTTP): 'better-auth.session_token'
+  const sessionToken =
+    request.cookies.get('better-auth.session_token')?.value ||
+    request.cookies.get('__Secure-better-auth.session_token')?.value;
 
   // Redirect authenticated users away from auth pages
   if (isAuthRoute && sessionToken) {
@@ -27,6 +31,6 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/((?!api|_next/static|_next/image|favicon.ico|image.svg).*)',
   ],
 };
