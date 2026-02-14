@@ -1,7 +1,7 @@
 'use client';
 
 import { signIn } from '@/lib/auth/client';
-import { Button, Card, CardHeader, CardTitle, CardContent } from '@/components/ui';
+import { Button } from '@/components/ui';
 
 export default function LoginPage() {
   const handleGoogleLogin = async () => {
@@ -12,16 +12,24 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4 py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader className="text-center">
-          <div className="text-4xl mb-4">💈</div>
-          <CardTitle className="text-2xl font-bold">Welcome to BookCut</CardTitle>
-          <p className="text-slate-600 mt-2">
-            Sign in to book your appointment
-          </p>
-        </CardHeader>
-        <CardContent>
+    <div className="min-h-screen flex items-center justify-center bg-[#0B132B] px-4 py-12 relative overflow-hidden">
+      {/* Background effects */}
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-[#3FFFD9]/8 rounded-full blur-[120px] pointer-events-none" />
+      
+      <div className="w-full max-w-md relative">
+        <div className="bg-[#1C2541]/80 backdrop-blur-xl border border-[#3FFFD9]/15 rounded-2xl p-8 shadow-2xl shadow-[#0B132B]/50">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="inline-flex items-center justify-center w-14 h-14 bg-[#3FFFD9]/10 rounded-2xl mb-4">
+              <span className="text-3xl">✂️</span>
+            </div>
+            <h1 className="text-2xl font-bold text-[#F8FAFC]">Welcome to BookCut</h1>
+            <p className="text-[#8B9DC3] mt-2 text-sm">
+              Sign in to book your appointment
+            </p>
+          </div>
+
+          {/* Google Login Button */}
           <Button
             onClick={handleGoogleLogin}
             className="w-full flex items-center justify-center gap-3"
@@ -47,13 +55,14 @@ export default function LoginPage() {
             </svg>
             Continue with Google
           </Button>
-          <div className="mt-8 pt-6 border-t border-slate-100 text-center">
-            <p className="text-sm text-slate-500">
+
+          <div className="mt-8 pt-6 border-t border-[#1C2541] text-center">
+            <p className="text-xs text-[#6B7A99]">
               By signing in, you agree to our Terms of Service and Privacy Policy.
             </p>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 }

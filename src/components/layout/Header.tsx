@@ -43,7 +43,7 @@ export function Header() {
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white/80 backdrop-blur-md border-b border-slate-200">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0B132B]/80 backdrop-blur-xl border-b border-[#3FFFD9]/10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -56,42 +56,42 @@ export function Header() {
                   className="h-full w-full object-contain group-hover:scale-110 transition-transform"
                 />
               </div>
-              <span className="text-lg sm:text-xl font-bold text-slate-900 tracking-tight">
-                Book<span className="text-amber-600">Cut</span>
+              <span className="text-lg sm:text-xl font-bold text-[#F8FAFC] tracking-tight">
+                Book<span className="text-[#3FFFD9]">Cut</span>
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/#services" className="text-slate-600 hover:text-amber-600 font-medium transition-colors">
+            <Link href="/#services" className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors text-sm">
               Services
             </Link>
-            <Link href="/#barbers" className="text-slate-600 hover:text-amber-600 font-medium transition-colors">
+            <Link href="/#barbers" className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors text-sm">
               Barbers
             </Link>
             {user && (
-              <Link href="/bookings" className="text-slate-600 hover:text-amber-600 font-medium transition-colors">
+              <Link href="/bookings" className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors text-sm">
                 My Bookings
               </Link>
             )}
             {user?.role === 'admin' && (
-              <Link href="/admin" className="text-slate-900 font-bold hover:text-amber-600 transition-colors">
+              <Link href="/admin" className="text-[#3FFFD9] font-semibold hover:text-[#5BFFD9] transition-colors text-sm">
                   Admin
               </Link>
             )}
           </nav>
 
           {/* Desktop Actions */}
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-3">
             {!loading && (
               <>
                 {user ? (
-                  <div className="flex items-center space-x-4">
-                    <span className="text-sm text-slate-600 hidden lg:inline-block">
-                      Hi, <span className="font-semibold text-slate-900">{user.name}</span>
+                  <div className="flex items-center space-x-3">
+                    <span className="text-sm text-[#8B9DC3] hidden lg:inline-block">
+                      <span className="font-medium text-[#F8FAFC]">{user.name}</span>
                     </span>
-                    <Button variant="ghost" size="sm" onClick={handleLogout}>
+                    <Button variant="ghost" size="sm" onClick={handleLogout} className="text-[#8B9DC3] hover:text-[#F8FAFC]">
                       Logout
                     </Button>
                     <Link href="/book">
@@ -101,7 +101,7 @@ export function Header() {
                 ) : (
                   <>
                     <Link href="/login">
-                      <Button variant="ghost" size="sm">Login</Button>
+                      <Button variant="ghost" size="sm" className="text-[#8B9DC3] hover:text-[#F8FAFC]">Login</Button>
                     </Link>
                     <Link href="/book">
                       <Button size="sm">Book Now</Button>
@@ -115,7 +115,7 @@ export function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-md text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
+            className="md:hidden p-2 rounded-lg text-[#8B9DC3] hover:text-[#3FFFD9] hover:bg-[#1C2541] transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
@@ -132,18 +132,18 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-slate-200 bg-white/95 backdrop-blur-md">
-            <nav className="flex flex-col space-y-3">
+          <div className="md:hidden py-4 border-t border-[#1C2541]">
+            <nav className="flex flex-col space-y-1">
               <Link 
                 href="/#services" 
-                className="text-slate-600 hover:text-amber-600 font-medium transition-colors px-2 py-2"
+                className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
                 onClick={closeMobileMenu}
               >
                 Services
               </Link>
               <Link 
                 href="/#barbers" 
-                className="text-slate-600 hover:text-amber-600 font-medium transition-colors px-2 py-2"
+                className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
                 onClick={closeMobileMenu}
               >
                 Barbers
@@ -151,7 +151,7 @@ export function Header() {
               {user && (
                 <Link 
                   href="/bookings" 
-                  className="text-slate-600 hover:text-amber-600 font-medium transition-colors px-2 py-2"
+                  className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
                   onClick={closeMobileMenu}
                 >
                   My Bookings
@@ -160,7 +160,7 @@ export function Header() {
               {user?.role === 'admin' && (
                 <Link 
                   href="/admin" 
-                  className="text-slate-900 font-bold hover:text-amber-600 transition-colors px-2 py-2"
+                  className="text-[#3FFFD9] font-semibold hover:text-[#5BFFD9] transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
                   onClick={closeMobileMenu}
                 >
                   Admin
@@ -168,16 +168,16 @@ export function Header() {
               )}
               
               {!loading && (
-                <div className="pt-3 border-t border-slate-200 space-y-3">
+                <div className="pt-3 mt-2 border-t border-[#1C2541] space-y-2">
                   {user ? (
                     <>
-                      <div className="px-2 py-1 text-sm text-slate-600">
-                        Hi, <span className="font-semibold text-slate-900">{user.name}</span>
+                      <div className="px-3 py-1.5 text-sm text-[#8B9DC3]">
+                        Signed in as <span className="font-semibold text-[#F8FAFC]">{user.name}</span>
                       </div>
                       <Link href="/book" onClick={closeMobileMenu}>
                         <Button size="sm" className="w-full">Book Now</Button>
                       </Link>
-                      <Button variant="outline" size="sm" onClick={handleLogout} className="w-full">
+                      <Button variant="outline" size="sm" onClick={handleLogout} className="w-full mt-2">
                         Logout
                       </Button>
                     </>
@@ -187,7 +187,7 @@ export function Header() {
                         <Button size="sm" className="w-full">Book Now</Button>
                       </Link>
                       <Link href="/login" onClick={closeMobileMenu}>
-                        <Button variant="outline" size="sm" className="w-full">Login</Button>
+                        <Button variant="outline" size="sm" className="w-full mt-2">Login</Button>
                       </Link>
                     </>
                   )}
