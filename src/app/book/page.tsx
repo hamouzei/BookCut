@@ -14,7 +14,7 @@ import { Service, Barber } from '@/types';
 export default function BookingPage() {
   const [step, setStep] = useState(1);
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, isPending } = useSession();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [bookingData, setBookingData] = useState({
     serviceId: null as number | null,
@@ -27,6 +27,11 @@ export default function BookingPage() {
   const prevStep = () => setStep((s) => s - 1);
 
   const handleBooking = async () => {
+    // Don't redirect if session is still loading
+    if (isPending) {
+      return;
+    }
+    
     if (!session) {
       router.push(`/login?redirect=/book`);
       return;
@@ -67,6 +72,18 @@ export default function BookingPage() {
       setIsSubmitting(false);
     }
   };
+
+  // Show loading state while checking session
+  if (isPending) {
+    return (
+      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
+          <p className="text-slate-600">Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
