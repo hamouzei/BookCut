@@ -6,7 +6,7 @@ export async function middleware(request: NextRequest) {
 
   // Define protected routes that require authentication
   const isAdminRoute = pathname.startsWith('/admin');
-  const isProtectedRoute = pathname.startsWith('/bookings');
+  const isProtectedRoute = pathname.startsWith('/bookings') || pathname.startsWith('/book');
   const isAuthRoute = pathname.startsWith('/login');
 
   // Get session cookie - Better Auth uses different names for HTTP vs HTTPS
