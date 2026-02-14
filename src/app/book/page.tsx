@@ -69,11 +69,11 @@ export default function BookingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-slate-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
-        <div className="mb-8 text-center">
-          <h1 className="text-3xl font-bold text-slate-900">Book Appointment</h1>
-          <p className="mt-2 text-slate-600">Step {step} of 5</p>
+        <div className="mb-6 sm:mb-8 text-center">
+          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Book Appointment</h1>
+          <p className="mt-2 text-sm sm:text-base text-slate-600">Step {step} of 5</p>
           {/* Progress Bar */}
           <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
             <div 
@@ -83,53 +83,53 @@ export default function BookingPage() {
           </div>
         </div>
 
-        <Card className="p-6 shadow-lg">
+        <Card className="p-4 sm:p-6 shadow-lg">
           {step === 1 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Select Service</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Service</h2>
               <ServiceSelection 
                   selectedId={bookingData.serviceId} 
                   onSelect={(service: Service) => setBookingData({...bookingData, serviceId: service.id})} 
               />
               <div className="mt-6 flex justify-end">
-                <Button onClick={nextStep} disabled={!bookingData.serviceId}>Next</Button>
+                <Button onClick={nextStep} disabled={!bookingData.serviceId} className="w-full sm:w-auto">Next</Button>
               </div>
             </div>
           )}
 
           {step === 2 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Select Barber</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Barber</h2>
               <BarberSelection 
                   selectedId={bookingData.barberId} 
                   onSelect={(barber: Barber) => setBookingData({...bookingData, barberId: barber.id})} 
               />
-              <div className="mt-6 flex justify-between">
-                <Button variant="outline" onClick={prevStep}>Back</Button>
-                <Button onClick={nextStep} disabled={!bookingData.barberId}>Next</Button>
+              <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+                <Button variant="outline" onClick={prevStep} className="w-full sm:w-auto">Back</Button>
+                <Button onClick={nextStep} disabled={!bookingData.barberId} className="w-full sm:w-auto">Next</Button>
               </div>
             </div>
           )}
 
           {step === 3 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Select Date</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Date</h2>
               <div className="flex justify-center">
                 <DateCalendar 
                   selectedDate={bookingData.date}
                   onSelect={(date) => setBookingData({...bookingData, date})}
                 />
               </div>
-              <div className="mt-6 flex justify-between">
-                <Button variant="outline" onClick={prevStep}>Back</Button>
-                <Button onClick={nextStep} disabled={!bookingData.date}>Next</Button>
+              <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+                <Button variant="outline" onClick={prevStep} className="w-full sm:w-auto">Back</Button>
+                <Button onClick={nextStep} disabled={!bookingData.date} className="w-full sm:w-auto">Next</Button>
               </div>
             </div>
           )}
           
           {step === 4 && (
             <div>
-              <h2 className="text-xl font-semibold mb-4">Select Time</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Time</h2>
               <p className="text-sm text-slate-500 mb-4">Showing available slots for your selected barber.</p>
               <TimeSlotPicker 
                 date={bookingData.date!}
@@ -138,16 +138,16 @@ export default function BookingPage() {
                 selectedTime={bookingData.time}
                 onSelect={(time: string) => setBookingData({...bookingData, time})}
               />
-              <div className="mt-6 flex justify-between">
-                <Button variant="outline" onClick={prevStep}>Back</Button>
-                <Button onClick={nextStep} disabled={!bookingData.time}>Next</Button>
+              <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+                <Button variant="outline" onClick={prevStep} className="w-full sm:w-auto">Back</Button>
+                <Button onClick={nextStep} disabled={!bookingData.time} className="w-full sm:w-auto">Next</Button>
               </div>
             </div>
           )}
 
           {step === 5 && (
              <div>
-               <h2 className="text-xl font-semibold mb-4">Confirm Booking</h2>
+               <h2 className="text-lg sm:text-xl font-semibold mb-4">Confirm Booking</h2>
                <BookingSummary 
                  serviceId={bookingData.serviceId!}
                  date={bookingData.date!}
@@ -155,9 +155,9 @@ export default function BookingPage() {
                  onConfirm={handleBooking}
                  isSubmitting={isSubmitting}
                />
-                <div className="mt-6 flex justify-between">
-                <Button variant="outline" onClick={prevStep} disabled={isSubmitting}>Back</Button>
-                <Button onClick={handleBooking} disabled={isSubmitting}>
+                <div className="mt-6 flex flex-col sm:flex-row justify-between gap-3">
+                <Button variant="outline" onClick={prevStep} disabled={isSubmitting} className="w-full sm:w-auto">Back</Button>
+                <Button onClick={handleBooking} disabled={isSubmitting} className="w-full sm:w-auto">
                   {isSubmitting ? 'Confirming...' : 'Confirm Booking'}
                 </Button>
               </div>

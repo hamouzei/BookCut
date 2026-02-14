@@ -6,21 +6,21 @@ export default function Home() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 to-amber-50">
 
       {/* Hero Section */}
-      <main className="max-w-6xl mx-auto px-4 py-16">
-        <div className="text-center mb-16">
-          <h1 className="text-5xl font-bold text-slate-900 mb-6">
+      <main className="max-w-6xl mx-auto px-4 py-12 sm:py-16">
+        <div className="text-center mb-12 sm:mb-16">
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-slate-900 mb-4 sm:mb-6">
             Book Your Perfect
             <span className="text-amber-600"> Haircut</span>
           </h1>
-          <p className="text-xl text-slate-600 max-w-2xl mx-auto mb-8">
+          <p className="text-base sm:text-lg md:text-xl text-slate-600 max-w-2xl mx-auto mb-6 sm:mb-8 px-4">
             Skip the wait. Book your appointment online and get the style you deserve from our expert barbers.
           </p>
-          <div className="flex justify-center gap-4">
-            <Link href="/book">
-              <Button size="lg">Book Appointment</Button>
+          <div className="flex flex-col sm:flex-row justify-center gap-3 sm:gap-4 px-4">
+            <Link href="/book" className="w-full sm:w-auto">
+              <Button size="lg" className="w-full sm:w-auto">Book Appointment</Button>
             </Link>
-            <Link href="/#services">
-              <Button variant="outline" size="lg">View Services</Button>
+            <Link href="/#services" className="w-full sm:w-auto">
+              <Button variant="outline" size="lg" className="w-full sm:w-auto">View Services</Button>
             </Link>
           </div>
         </div>
@@ -56,15 +56,15 @@ export default function Home() {
         </div>
 
         {/* CTA Section */}
-        <div className="bg-slate-900 rounded-2xl p-8 md:p-12 text-center">
-          <h2 className="text-3xl font-bold text-white mb-4">
+        <div className="bg-slate-900 rounded-2xl p-6 sm:p-8 md:p-12 text-center">
+          <h2 className="text-2xl sm:text-3xl font-bold text-white mb-3 sm:mb-4">
             Ready to get started?
           </h2>
-          <p className="text-slate-300 mb-6">
+          <p className="text-slate-300 mb-4 sm:mb-6 text-sm sm:text-base">
             Book your first appointment today and experience the difference.
           </p>
           <Link href="/book">
-            <Button size="lg" className="bg-amber-500 hover:bg-amber-600">
+            <Button size="lg" className="bg-amber-500 hover:bg-amber-600 w-full sm:w-auto">
               Book Your Appointment
             </Button>
           </Link>
