@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
-import { Card, Button } from '@/components/ui';
+import { Button } from '@/components/ui';
 import { Booking, BookingStatus } from '@/types';
 import { format } from 'date-fns';
 
@@ -18,41 +18,27 @@ export default function AdminBookingsPage() {
   const statusFilter = searchParams.get('status') as BookingStatus | null;
   const page = parseInt(searchParams.get('page') || '1');
 
-  useEffect(() => {
-    fetchBookings();
-  }, [page, statusFilter]);
+  useEffect(() => { fetchBookings(); }, [page, statusFilter]);
 
   async function fetchBookings() {
     setIsLoading(true);
     try {
-      const query = new URLSearchParams({
-        page: page.toString(),
-        limit: '10',
-      });
+      const query = new URLSearchParams({ page: page.toString(), limit: '10' });
       if (statusFilter) query.set('status', statusFilter);
-
       const res = await fetch(`/api/bookings?${query.toString()}`);
       const data = await res.json();
-      
       if (data.success) {
         setBookings(data.data);
         setPagination(data.pagination);
       }
-    } catch (error) {
-      console.error('Failed to fetch bookings', error);
-    } finally {
-      setIsLoading(false);
-    }
+    } catch (error) { console.error('Failed to fetch bookings', error); }
+    finally { setIsLoading(false); }
   }
 
   const handleStatusChange = (newStatus: string | null) => {
     const params = new URLSearchParams(searchParams);
-    if (newStatus) {
-      params.set('status', newStatus);
-    } else {
-      params.delete('status');
-    }
-    params.set('page', '1'); // Reset to page 1
+    if (newStatus) { params.set('status', newStatus); } else { params.delete('status'); }
+    params.set('page', '1');
     router.push(`${pathname}?${params.toString()}`);
   }
 
@@ -62,203 +48,178 @@ export default function AdminBookingsPage() {
     router.push(`${pathname}?${params.toString()}`);
   }
 
+  const statusColors: Record<string, string> = {
+    confirmed: 'bg-green-500/15 text-green-400',
+    pending: 'bg-[#F5B700]/15 text-[#F5B700]',
+    cancelled: 'bg-red-500/15 text-red-400',
+    completed: 'bg-[#94A3B8]/15 text-[#94A3B8]',
+  };
+
   return (
-    <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <h1 className="text-3xl font-bold text-slate-900">Bookings</h1>
-        <div className="flex gap-2">
-            {/* Filter Buttons */}
-            {['pending', 'confirmed', 'completed', 'cancelled'].map(status => (
-                <Button 
-                    key={status}
-                    size="sm"
-                    variant={statusFilter === status ? 'primary' : 'outline'}
-                    onClick={() => handleStatusChange(statusFilter === status ? null : status)}
-                    className="capitalize"
-                >
-                    {status}
-                </Button>
-            ))}
-            {(statusFilter) && (
-                 <Button size="sm" variant="ghost" onClick={() => handleStatusChange(null)}>
-                    Clear Filter
-                 </Button>
-            )}
+    <div className="space-y-5">
+      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <h1 className="text-xl sm:text-2xl font-bold text-[#F8FAFC]">Bookings</h1>
+        <div className="flex flex-wrap gap-2">
+          {['pending', 'confirmed', 'completed', 'cancelled'].map(status => (
+            <Button 
+              key={status}
+              size="sm"
+              variant={statusFilter === status ? 'primary' : 'outline'}
+              onClick={() => handleStatusChange(statusFilter === status ? null : status)}
+              className={`capitalize text-xs ${statusFilter !== status ? 'border-[#1E293B] text-[#94A3B8] hover:border-[#F5B700]/40 hover:text-[#F5B700]' : ''}`}
+            >
+              {status}
+            </Button>
+          ))}
+          {statusFilter && (
+            <Button size="sm" variant="ghost" onClick={() => handleStatusChange(null)} className="text-xs text-[#64748B]">
+              Clear
+            </Button>
+          )}
         </div>
       </div>
 
-      <Card className="overflow-hidden">
+      {/* Mobile Card View */}
+      <div className="block sm:hidden space-y-3">
+        {isLoading ? (
+          <p className="text-[#64748B] text-center py-12 text-sm">Loading bookings...</p>
+        ) : bookings.length === 0 ? (
+          <p className="text-[#64748B] text-center py-12 text-sm">No bookings found.</p>
+        ) : bookings.map((booking) => (
+          <div key={booking.id} className="bg-[#1E293B]/50 border border-[#1E293B] rounded-xl p-4 space-y-2">
+            <div className="flex justify-between items-start">
+              <div>
+                <p className="text-sm font-medium text-[#F8FAFC]">{booking.customerName}</p>
+                <p className="text-xs text-[#64748B]">{booking.customerEmail}</p>
+              </div>
+              <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${statusColors[booking.status] || statusColors.completed}`}>
+                {booking.status}
+              </span>
+            </div>
+            <div className="flex justify-between text-xs text-[#94A3B8]">
+              <span>{format(new Date(booking.date), 'MMM d, yyyy')} · {booking.startTime}</span>
+              <span>{booking.serviceName || 'Service'}</span>
+            </div>
+            <div className="flex gap-2 pt-1">
+              {booking.status === 'pending' && (
+                <Button size="sm" className="flex-1 text-xs" onClick={async () => {
+                  if (!confirm('Confirm this booking?')) return;
+                  try {
+                    const res = await fetch(`/api/bookings/${booking.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) });
+                    if (res.ok) fetchBookings();
+                  } catch (e) { console.error(e); }
+                }}>Confirm</Button>
+              )}
+              <Button variant="ghost" size="sm" className="text-xs text-red-400 hover:bg-red-500/10" onClick={async () => {
+                if (!confirm('Delete this booking permanently?')) return;
+                try {
+                  const res = await fetch(`/api/bookings/${booking.id}`, { method: 'DELETE' });
+                  if (res.ok) fetchBookings();
+                } catch (e) { console.error(e); }
+              }}>Delete</Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop Table View */}
+      <div className="hidden sm:block bg-[#1E293B]/30 border border-[#1E293B] rounded-xl overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-slate-200">
-            <thead className="bg-slate-50">
+          <table className="min-w-full divide-y divide-[#1E293B]">
+            <thead className="bg-[#0F172A]">
               <tr>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Reference</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Customer</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Date & Time</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Service</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Barber</th>
-                <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-slate-500 uppercase tracking-wider">Status</th>
-                <th scope="col" className="relative px-6 py-3"><span className="sr-only">Actions</span></th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider">Ref</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider">Customer</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider">Date</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider">Service</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider">Barber</th>
+                <th className="px-4 py-3 text-left text-xs font-medium text-[#64748B] uppercase tracking-wider">Status</th>
+                <th className="px-4 py-3 text-right text-xs font-medium text-[#64748B] uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
-            <tbody className="bg-white divide-y divide-slate-200">
+            <tbody className="divide-y divide-[#1E293B]">
               {isLoading ? (
-                <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">Loading bookings...</td>
-                </tr>
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-[#64748B] text-sm">Loading bookings...</td></tr>
               ) : bookings.length === 0 ? (
-                <tr>
-                    <td colSpan={7} className="px-6 py-12 text-center text-slate-500">No bookings found.</td>
+                <tr><td colSpan={7} className="px-4 py-12 text-center text-[#64748B] text-sm">No bookings found.</td></tr>
+              ) : bookings.map((booking) => (
+                <tr key={booking.id} className="hover:bg-[#1E293B]/40 transition-colors">
+                  <td className="px-4 py-3 whitespace-nowrap text-xs font-mono text-[#64748B]">
+                    BC-{booking.id.toString().padStart(4, '0')}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-sm font-medium text-[#F8FAFC]">{booking.customerName}</div>
+                    <div className="text-xs text-[#64748B]">{booking.customerEmail}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <div className="text-sm text-[#F8FAFC]">{format(new Date(booking.date), 'MMM d')}</div>
+                    <div className="text-xs text-[#64748B]">{booking.startTime}</div>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-[#94A3B8]">
+                    {booking.serviceName || 'Service'}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-sm text-[#94A3B8]">
+                    {booking.barberName}
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap">
+                    <span className={`px-2 py-0.5 text-xs font-bold rounded-full ${statusColors[booking.status] || statusColors.completed}`}>
+                      {booking.status}
+                    </span>
+                  </td>
+                  <td className="px-4 py-3 whitespace-nowrap text-right space-x-1">
+                    {booking.status === 'pending' && (
+                      <Button size="sm" className="text-xs" onClick={async () => {
+                        if (!confirm('Confirm this booking?')) return;
+                        try {
+                          const res = await fetch(`/api/bookings/${booking.id}`, { method: 'PATCH', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ status: 'confirmed' }) });
+                          if (res.ok) fetchBookings();
+                        } catch (e) { console.error(e); }
+                      }}>Confirm</Button>
+                    )}
+                    <Button variant="ghost" size="sm" className="text-xs text-red-400 hover:text-red-300 hover:bg-red-500/10" onClick={async () => {
+                      if (!confirm('Delete this booking permanently?')) return;
+                      try {
+                        const res = await fetch(`/api/bookings/${booking.id}`, { method: 'DELETE' });
+                        if (res.ok) fetchBookings();
+                      } catch (e) { console.error(e); }
+                    }}>Delete</Button>
+                  </td>
                 </tr>
-              ) : (
-                bookings.map((booking) => (
-                  <tr key={booking.id} className="hover:bg-slate-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-mono text-slate-500">
-                      BC-{booking.id.toString().padStart(6, '0')}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm font-medium text-slate-900">{booking.customerName}</div>
-                      <div className="text-sm text-slate-500">{booking.customerEmail}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <div className="text-sm text-slate-900">{format(new Date(booking.date), 'MMM d, yyyy')}</div>
-                      <div className="text-sm text-slate-500">{booking.startTime}</div>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                      {booking.serviceName || 'Standard Service'}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-sm text-slate-500">
-                      {booking.barberName}
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-bold rounded-full 
-                        ${booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
-                          booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                          booking.status === 'cancelled' ? 'bg-red-100 text-red-800' :
-                          'bg-slate-100 text-slate-800'}`}>
-                        {booking.status}
-                      </span>
-                    </td>
-                    <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                      <Button 
-                        disabled={booking.status !== 'pending'}
-                        variant={booking.status === 'pending' ? 'primary' : 'ghost'}
-                        size="sm"
-                        onClick={async () => {
-                            if (booking.status !== 'pending') return;
-                            if (!confirm('Confirm this booking?')) return;
-                            
-                            try {
-                                const res = await fetch(`/api/bookings/${booking.id}`, {
-                                    method: 'PATCH',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({ status: 'confirmed' })
-                                });
-                                if (res.ok) fetchBookings();
-                            } catch (e) {
-                                console.error(e);
-                            }
-                        }}
-                      >
-                        {booking.status === 'pending' ? 'Confirm' : 'Details'}
-                      </Button>
-                      <Button 
-                        variant="ghost"
-                        size="sm"
-                        className="text-red-600 hover:text-red-900 hover:bg-red-50 ml-1"
-                        onClick={async () => {
-                            if (!confirm('Are you sure you want to PERMANENTLY delete this booking? This cannot be undone.')) return;
-                            
-                            try {
-                                const res = await fetch(`/api/bookings/${booking.id}`, {
-                                    method: 'DELETE',
-                                });
-                                if (res.ok) fetchBookings();
-                            } catch (e) {
-                                console.error(e);
-                            }
-                        }}
-                      >
-                        Delete
-                      </Button>
-                      <a href={`/bookings/${booking.id}/confirmation`} target="_blank" className="text-amber-600 hover:text-amber-900 ml-2 text-sm font-medium">View</a>
-                    </td>
-                  </tr>
-                ))
-              )}
+              ))}
             </tbody>
           </table>
         </div>
         
         {/* Pagination */}
         {!isLoading && pagination.totalPages > 1 && (
-            <div className="bg-white px-4 py-3 flex items-center justify-between border-t border-slate-200 sm:px-6">
-                <div className="flex-1 flex justify-between sm:hidden">
-                    <Button 
-                        size="sm" variant="outline" 
-                        disabled={page <= 1}
-                        onClick={() => handlePageChange(page - 1)}
-                    >
-                        Previous
-                    </Button>
-                    <Button 
-                        size="sm" variant="outline" 
-                        disabled={page >= pagination.totalPages}
-                        onClick={() => handlePageChange(page + 1)}
-                    >
-                        Next
-                    </Button>
-                </div>
-                <div className="hidden sm:flex-1 sm:flex sm:items-center sm:justify-between">
-                    <div>
-                        <p className="text-sm text-slate-700">
-                            Showing <span className="font-medium">{(page - 1) * 10 + 1}</span> to <span className="font-medium">{Math.min(page * 10, pagination.total)}</span> of <span className="font-medium">{pagination.total}</span> results
-                        </p>
-                    </div>
-                    <div>
-                        <nav className="relative z-0 inline-flex rounded-md shadow-sm -space-x-px" aria-label="Pagination">
-                            <Button
-                                variant="outline"
-                                className="rounded-l-md px-2 py-2"
-                                disabled={page <= 1}
-                                onClick={() => handlePageChange(page - 1)}
-                            >
-                                <span className="sr-only">Previous</span>
-                                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fillRule="evenodd" d="M12.707 5.293a1 1 0 010 1.414L9.414 10l3.293 3.293a1 1 0 01-1.414 1.414l-4-4a1 1 0 010-1.414l4-4a1 1 0 011.414 0z" clipRule="evenodd" />
-                                </svg>
-                            </Button>
-                            {/* Simple page numbers */}
-                            {[...Array(pagination.totalPages)].map((_, i) => (
-                                <button
-                                    key={i + 1}
-                                    onClick={() => handlePageChange(i + 1)}
-                                    className={`relative inline-flex items-center px-4 py-2 border text-sm font-medium
-                                        ${page === i + 1 
-                                            ? 'z-10 bg-amber-50 border-amber-500 text-amber-600' 
-                                            : 'bg-white border-slate-300 text-slate-500 hover:bg-slate-50'
-                                        }`}
-                                >
-                                    {i + 1}
-                                </button>
-                            ))}
-                            <Button
-                                variant="outline"
-                                className="rounded-r-md px-2 py-2"
-                                disabled={page >= pagination.totalPages}
-                                onClick={() => handlePageChange(page + 1)}
-                            >
-                                <span className="sr-only">Next</span>
-                                <svg className="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd" />
-                                </svg>
-                            </Button>
-                        </nav>
-                    </div>
-                </div>
+          <div className="border-t border-[#1E293B] px-4 py-3 flex items-center justify-between">
+            <p className="text-xs text-[#64748B]">
+              {(page - 1) * 10 + 1}–{Math.min(page * 10, pagination.total)} of {pagination.total}
+            </p>
+            <div className="flex gap-1">
+              <Button variant="outline" size="sm" disabled={page <= 1} onClick={() => handlePageChange(page - 1)} className="text-xs border-[#1E293B] text-[#94A3B8] px-3">
+                ←
+              </Button>
+              {[...Array(pagination.totalPages)].map((_, i) => (
+                <button
+                  key={i + 1}
+                  onClick={() => handlePageChange(i + 1)}
+                  className={`px-3 py-1.5 text-xs rounded-lg font-medium transition-colors ${
+                    page === i + 1 
+                      ? 'bg-[#F5B700]/15 text-[#F5B700] border border-[#F5B700]/30' 
+                      : 'text-[#64748B] hover:text-[#F8FAFC] hover:bg-[#1E293B]'
+                  }`}
+                >
+                  {i + 1}
+                </button>
+              ))}
+              <Button variant="outline" size="sm" disabled={page >= pagination.totalPages} onClick={() => handlePageChange(page + 1)} className="text-xs border-[#1E293B] text-[#94A3B8] px-3">
+                →
+              </Button>
             </div>
+          </div>
         )}
-      </Card>
+      </div>
     </div>
   );
 }

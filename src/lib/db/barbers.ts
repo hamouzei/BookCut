@@ -98,3 +98,47 @@ export async function updateBarberWorkingHours(
   `;
   return result.length > 0;
 }
+
+// Update barber profile
+export async function updateBarber(
+  id: number,
+  data: Partial<Pick<Barber, 'name' | 'email' | 'phone' | 'bio'>>
+): Promise<Barber | null> {
+  const sql = getSql();
+  const result = await sql`
+    UPDATE barbers
+    SET 
+      name = COALESCE(${data.name ?? null}, name),
+      email = COALESCE(${data.email ?? null}, email),
+      phone = COALESCE(${data.phone ?? null}, phone),
+      bio = COALESCE(${data.bio ?? null}, bio),
+      updated_at = NOW()
+    WHERE id = ${id}
+    RETURNING id, user_id, name, email, phone, bio, avatar_url, working_hours, is_active
+  `;
+  if (!result[0]) return null;
+  const row = result[0];
+  return {
+    id: row.id,
+    userId: row.user_id,
+    name: row.name,
+    email: row.email,
+    phone: row.phone,
+    bio: row.bio,
+    avatarUrl: row.avatar_url,
+    workingHours: row.working_hours as WorkingHours,
+    isActive: row.is_active,
+  } as Barber;
+}
+
+// Delete (deactivate) a barber
+export async function deleteBarber(id: number): Promise<boolean> {
+  const sql = getSql();
+  const result = await sql`
+    UPDATE barbers
+    SET is_active = false, updated_at = NOW()
+    WHERE id = ${id}
+    RETURNING id
+  `;
+  return result.length > 0;
+}
