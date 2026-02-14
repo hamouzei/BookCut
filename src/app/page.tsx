@@ -1,17 +1,19 @@
 import Link from 'next/link';
 import { Button } from "@/components/ui";
+import { ServicesShowcase } from '@/components/home/ServicesShowcase';
+import { BarbersShowcase } from '@/components/home/BarbersShowcase';
 
 export default function Home() {
   return (
     <div className="min-h-screen bg-[#0F172A] text-[#F8FAFC] overflow-hidden">
 
       {/* Hero Section */}
-      <main className="relative max-w-6xl mx-auto px-4 py-16 sm:py-24">
+      <main className="relative mx-auto px-4 py-16 sm:py-24">
         {/* Background glow effects */}
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-[#F5B700]/8 rounded-full blur-[140px] pointer-events-none" />
         <div className="absolute bottom-20 right-10 w-[250px] h-[250px] bg-[#F5B700]/5 rounded-full blur-[80px] pointer-events-none" />
 
-        <div className="relative text-center mb-16 sm:mb-24">
+        <div className="relative text-center mb-16 sm:mb-24 max-w-6xl mx-auto">
           {/* Status badge */}
           <div className="inline-flex items-center gap-2 bg-[#1E293B] border border-[#F5B700]/20 rounded-full px-4 py-1.5 text-sm text-[#F5B700] mb-8">
             <span className="w-2 h-2 bg-[#F5B700] rounded-full animate-pulse" />
@@ -41,7 +43,7 @@ export default function Home() {
         </div>
 
         {/* Features Grid */}
-        <div id="services" className="grid md:grid-cols-3 gap-6 mb-20">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6 mb-24">
           {[
             {
               icon: "⚡",
@@ -70,8 +72,30 @@ export default function Home() {
           ))}
         </div>
 
+        {/* Services Section */}
+        <div id="services" className="max-w-6xl mx-auto py-16 sm:py-20 border-t border-[#1E293B]">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Our Services</h2>
+            <p className="text-[#94A3B8] max-w-2xl mx-auto">
+              Choose from our premium selection of cuts and treatments.
+            </p>
+          </div>
+          <ServicesShowcase />
+        </div>
+
+        {/* Barbers Section */}
+        <div id="barbers" className="max-w-6xl mx-auto py-16 sm:py-20 border-t border-[#1E293B]">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-4">Meet the Team</h2>
+            <p className="text-[#94A3B8] max-w-2xl mx-auto">
+              Expert barbers dedicated to perfecting your look.
+            </p>
+          </div>
+          <BarbersShowcase />
+        </div>
+
         {/* CTA Section */}
-        <div className="relative bg-gradient-to-br from-[#1E293B] to-[#0F172A] border border-[#F5B700]/12 rounded-2xl p-8 sm:p-12 text-center overflow-hidden">
+        <div className="max-w-6xl mx-auto relative bg-gradient-to-br from-[#1E293B] to-[#0F172A] border border-[#F5B700]/12 rounded-2xl p-8 sm:p-12 text-center overflow-hidden mb-16">
           {/* Decorative gold line */}
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-24 h-[2px] bg-gradient-to-r from-transparent via-[#F5B700] to-transparent" />
           <div className="absolute top-0 right-0 w-[200px] h-[200px] bg-[#F5B700]/5 rounded-full blur-[80px] pointer-events-none" />
