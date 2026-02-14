@@ -76,34 +76,34 @@ export default function BookingPage() {
   // Show loading state while checking session
   if (isPending) {
     return (
-      <div className="min-h-screen bg-slate-50 flex items-center justify-center">
+      <div className="min-h-screen bg-[#0F172A] flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-amber-600 mx-auto mb-4"></div>
-          <p className="text-slate-600">Loading...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-[#F5B700] mx-auto mb-4"></div>
+          <p className="text-[#94A3B8]">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-slate-50 py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-[#0F172A] py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-3xl mx-auto">
         <div className="mb-6 sm:mb-8 text-center">
-          <h1 className="text-2xl sm:text-3xl font-bold text-slate-900">Book Appointment</h1>
-          <p className="mt-2 text-sm sm:text-base text-slate-600">Step {step} of 5</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#F8FAFC]">Book Appointment</h1>
+          <p className="mt-2 text-sm sm:text-base text-[#94A3B8]">Step {step} of 5</p>
           {/* Progress Bar */}
-          <div className="mt-4 h-2 bg-slate-200 rounded-full overflow-hidden">
+          <div className="mt-4 h-2 bg-[#1E293B] rounded-full overflow-hidden">
             <div 
-              className="h-full bg-amber-500 transition-all duration-300 ease-in-out"
+              className="h-full bg-[#F5B700] transition-all duration-300 ease-in-out"
               style={{ width: `${(step / 5) * 100}%` }}
             />
           </div>
         </div>
 
-        <Card className="p-4 sm:p-6 shadow-lg">
+        <Card variant="dark" className="p-4 sm:p-6 shadow-lg border-[#F5B700]/8">
           {step === 1 && (
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Service</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#F8FAFC]">Select Service</h2>
               <ServiceSelection 
                   selectedId={bookingData.serviceId} 
                   onSelect={(service: Service) => setBookingData({...bookingData, serviceId: service.id})} 
@@ -116,7 +116,7 @@ export default function BookingPage() {
 
           {step === 2 && (
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Barber</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#F8FAFC]">Select Barber</h2>
               <BarberSelection 
                   selectedId={bookingData.barberId} 
                   onSelect={(barber: Barber) => setBookingData({...bookingData, barberId: barber.id})} 
@@ -130,7 +130,7 @@ export default function BookingPage() {
 
           {step === 3 && (
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Date</h2>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#F8FAFC]">Select Date</h2>
               <div className="flex justify-center">
                 <DateCalendar 
                   selectedDate={bookingData.date}
@@ -146,8 +146,8 @@ export default function BookingPage() {
           
           {step === 4 && (
             <div>
-              <h2 className="text-lg sm:text-xl font-semibold mb-4">Select Time</h2>
-              <p className="text-sm text-slate-500 mb-4">Showing available slots for your selected barber.</p>
+              <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#F8FAFC]">Select Time</h2>
+              <p className="text-sm text-[#94A3B8] mb-4">Showing available slots for your selected barber.</p>
               <TimeSlotPicker 
                 date={bookingData.date!}
                 serviceId={bookingData.serviceId!}
@@ -164,7 +164,7 @@ export default function BookingPage() {
 
           {step === 5 && (
              <div>
-               <h2 className="text-lg sm:text-xl font-semibold mb-4">Confirm Booking</h2>
+               <h2 className="text-lg sm:text-xl font-semibold mb-4 text-[#F8FAFC]">Confirm Booking</h2>
                <BookingSummary 
                  serviceId={bookingData.serviceId!}
                  date={bookingData.date!}

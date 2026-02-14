@@ -13,10 +13,10 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const baseStyles = "inline-flex items-center justify-center rounded-lg font-semibold transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer";
     
     const variants = {
-      primary: "bg-[#3FFFD9] text-[#0B132B] hover:bg-[#5BFFD9] focus:ring-[#3FFFD9] hover:shadow-[0_0_20px_rgba(63,255,217,0.3)]",
-      secondary: "bg-[#0B132B] text-[#F8FAFC] hover:bg-[#1C2541] focus:ring-[#1C2541]",
-      outline: "border-2 border-[#3FFFD9] text-[#3FFFD9] hover:bg-[#3FFFD9]/10 focus:ring-[#3FFFD9]",
-      ghost: "text-[#6B7A99] hover:bg-[#0B132B]/5 hover:text-[#0B132B] focus:ring-[#1C2541]",
+      primary: "bg-[#F5B700] text-[#0F172A] hover:bg-[#FFC933] focus:ring-[#F5B700] hover:shadow-[0_0_24px_rgba(245,183,0,0.35)]",
+      secondary: "bg-[#0F172A] text-[#F8FAFC] hover:bg-[#1E293B] focus:ring-[#1E293B]",
+      outline: "border-2 border-[#F5B700] text-[#F5B700] hover:bg-[#F5B700]/10 focus:ring-[#F5B700]",
+      ghost: "text-[#94A3B8] hover:bg-[#0F172A]/5 hover:text-[#0F172A] focus:ring-[#1E293B]",
       danger: "bg-red-600 text-white hover:bg-red-700 focus:ring-red-500",
     };
     

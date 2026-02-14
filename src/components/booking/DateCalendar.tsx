@@ -32,13 +32,13 @@ export function DateCalendar({ selectedDate, onSelect }: DateCalendarProps) {
   const renderHeader = () => {
     return (
       <div className="flex justify-between items-center mb-4">
-        <Button variant="ghost" size="sm" onClick={prevMonth} disabled={isBefore(endOfMonth(subMonths(currentMonth, 0)), today)}>
+        <Button variant="ghost" size="sm" onClick={prevMonth} disabled={isBefore(endOfMonth(subMonths(currentMonth, 0)), today)} className="text-[#94A3B8] hover:text-[#F5B700]">
           &lt;
         </Button>
-        <span className="font-bold text-lg text-slate-700">
+        <span className="font-bold text-lg text-[#F8FAFC]">
           {format(currentMonth, 'MMMM yyyy')}
         </span>
-        <Button variant="ghost" size="sm" onClick={nextMonth}>
+        <Button variant="ghost" size="sm" onClick={nextMonth} className="text-[#94A3B8] hover:text-[#F5B700]">
           &gt;
         </Button>
       </div>
@@ -50,7 +50,7 @@ export function DateCalendar({ selectedDate, onSelect }: DateCalendarProps) {
     return (
       <div className="grid grid-cols-7 mb-2">
         {days.map(day => (
-          <div key={day} className="text-center text-xs font-bold text-slate-500 py-1">
+          <div key={day} className="text-center text-xs font-bold text-[#64748B] py-1">
             {day}
           </div>
         ))}
@@ -82,8 +82,8 @@ export function DateCalendar({ selectedDate, onSelect }: DateCalendarProps) {
             key={day.toString()}
             className={`
               p-2 text-center relative cursor-pointer m-1 rounded-full transition-all
-              ${!isCurrentMonth ? 'text-slate-300' : isDisabled ? 'text-slate-300 cursor-not-allowed' : 'text-slate-700 hover:bg-slate-100'}
-              ${isSelected ? 'bg-amber-500 text-white hover:bg-amber-600 shadow-md transform scale-105' : ''}
+              ${!isCurrentMonth ? 'text-[#334155]' : isDisabled ? 'text-[#334155] cursor-not-allowed' : 'text-[#94A3B8] hover:bg-[#1E293B] hover:text-[#F8FAFC]'}
+              ${isSelected ? 'bg-[#F5B700] text-[#0F172A] hover:bg-[#FFC933] shadow-md shadow-[#F5B700]/20 transform scale-105 font-bold' : ''}
             `}
             onClick={() => !isDisabled && onSelect(cloneDay)}
           >
@@ -103,7 +103,7 @@ export function DateCalendar({ selectedDate, onSelect }: DateCalendarProps) {
   };
 
   return (
-    <div className="bg-white p-4 rounded-xl border border-slate-100 shadow-sm">
+    <div className="bg-[#0F172A] p-4 rounded-xl border border-[#1E293B]">
       {renderHeader()}
       {renderDays()}
       {renderCells()}

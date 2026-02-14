@@ -34,7 +34,7 @@ export function BarberSelection({ selectedId, onSelect }: BarberSelectionProps) 
     return (
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {[1, 2, 3].map((i) => (
-          <div key={i} className="h-32 bg-slate-200 rounded-lg animate-pulse" />
+          <div key={i} className="h-32 bg-[#1E293B] rounded-lg animate-pulse" />
         ))}
       </div>
     );
@@ -43,26 +43,25 @@ export function BarberSelection({ selectedId, onSelect }: BarberSelectionProps) 
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {barbers.map((barber) => (
-        <Card
+        <div
           key={barber.id}
-          className={`cursor-pointer transition-all hover:shadow-md border-2 p-4 flex items-center gap-4 ${
+          className={`cursor-pointer transition-all rounded-xl border-2 p-4 flex items-center gap-4 ${
             selectedId === barber.id
-              ? 'border-amber-500 bg-amber-50'
-              : 'border-transparent hover:border-slate-200'
+              ? 'border-[#F5B700] bg-[#F5B700]/5'
+              : 'border-[#1E293B] hover:border-[#F5B700]/40 bg-[#1E293B]/40'
           }`}
           onClick={() => onSelect(barber)}
         >
-          <div className="h-16 w-16 rounded-full bg-slate-200 flex-shrink-0 overflow-hidden">
-            {/* Placeholder for avatar */}
-            <div className="w-full h-full flex items-center justify-center bg-amber-100 text-amber-700 font-bold text-xl">
+          <div className="h-16 w-16 rounded-full flex-shrink-0 overflow-hidden">
+            <div className="w-full h-full flex items-center justify-center bg-[#F5B700]/15 text-[#F5B700] font-bold text-xl">
                {barber.name.charAt(0)}
             </div>
           </div>
           <div>
-            <h3 className="font-semibold text-slate-900">{barber.name}</h3>
-            <p className="text-sm text-slate-500 line-clamp-2">{barber.bio || 'Professional Barber'}</p>
+            <h3 className="font-semibold text-[#F8FAFC]">{barber.name}</h3>
+            <p className="text-sm text-[#94A3B8] line-clamp-2">{barber.bio || 'Professional Barber'}</p>
           </div>
-        </Card>
+        </div>
       ))}
     </div>
   );

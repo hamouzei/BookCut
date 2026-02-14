@@ -43,7 +43,7 @@ export function Header() {
   const closeMobileMenu = () => setMobileMenuOpen(false);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0B132B]/80 backdrop-blur-xl border-b border-[#3FFFD9]/10">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-[#0F172A]/85 backdrop-blur-xl border-b border-[#F5B700]/8">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -57,26 +57,26 @@ export function Header() {
                 />
               </div>
               <span className="text-lg sm:text-xl font-bold text-[#F8FAFC] tracking-tight">
-                Book<span className="text-[#3FFFD9]">Cut</span>
+                Book<span className="text-[#F5B700]">Cut</span>
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation */}
           <nav className="hidden md:flex items-center space-x-8">
-            <Link href="/#services" className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors text-sm">
+            <Link href="/#services" className="text-[#94A3B8] hover:text-[#F5B700] font-medium transition-colors text-sm">
               Services
             </Link>
-            <Link href="/#barbers" className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors text-sm">
+            <Link href="/#barbers" className="text-[#94A3B8] hover:text-[#F5B700] font-medium transition-colors text-sm">
               Barbers
             </Link>
             {user && (
-              <Link href="/bookings" className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors text-sm">
+              <Link href="/bookings" className="text-[#94A3B8] hover:text-[#F5B700] font-medium transition-colors text-sm">
                 My Bookings
               </Link>
             )}
             {user?.role === 'admin' && (
-              <Link href="/admin" className="text-[#3FFFD9] font-semibold hover:text-[#5BFFD9] transition-colors text-sm">
+              <Link href="/admin" className="text-[#F5B700] font-semibold hover:text-[#FFC933] transition-colors text-sm">
                   Admin
               </Link>
             )}
@@ -88,10 +88,10 @@ export function Header() {
               <>
                 {user ? (
                   <div className="flex items-center space-x-3">
-                    <span className="text-sm text-[#8B9DC3] hidden lg:inline-block">
+                    <span className="text-sm text-[#94A3B8] hidden lg:inline-block">
                       <span className="font-medium text-[#F8FAFC]">{user.name}</span>
                     </span>
-                    <Button variant="ghost" size="sm" onClick={handleLogout} className="text-[#8B9DC3] hover:text-[#F8FAFC]">
+                    <Button variant="ghost" size="sm" onClick={handleLogout} className="text-[#94A3B8] hover:text-[#F8FAFC]">
                       Logout
                     </Button>
                     <Link href="/book">
@@ -101,7 +101,7 @@ export function Header() {
                 ) : (
                   <>
                     <Link href="/login">
-                      <Button variant="ghost" size="sm" className="text-[#8B9DC3] hover:text-[#F8FAFC]">Login</Button>
+                      <Button variant="ghost" size="sm" className="text-[#94A3B8] hover:text-[#F8FAFC]">Login</Button>
                     </Link>
                     <Link href="/book">
                       <Button size="sm">Book Now</Button>
@@ -115,7 +115,7 @@ export function Header() {
           {/* Mobile Menu Button */}
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden p-2 rounded-lg text-[#8B9DC3] hover:text-[#3FFFD9] hover:bg-[#1C2541] transition-colors"
+            className="md:hidden p-2 rounded-lg text-[#94A3B8] hover:text-[#F5B700] hover:bg-[#1E293B] transition-colors"
             aria-label="Toggle menu"
           >
             {mobileMenuOpen ? (
@@ -132,46 +132,30 @@ export function Header() {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="md:hidden py-4 border-t border-[#1C2541]">
+          <div className="md:hidden py-4 border-t border-[#1E293B]">
             <nav className="flex flex-col space-y-1">
-              <Link 
-                href="/#services" 
-                className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
-                onClick={closeMobileMenu}
-              >
+              <Link href="/#services" className="text-[#94A3B8] hover:text-[#F5B700] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1E293B]" onClick={closeMobileMenu}>
                 Services
               </Link>
-              <Link 
-                href="/#barbers" 
-                className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
-                onClick={closeMobileMenu}
-              >
+              <Link href="/#barbers" className="text-[#94A3B8] hover:text-[#F5B700] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1E293B]" onClick={closeMobileMenu}>
                 Barbers
               </Link>
               {user && (
-                <Link 
-                  href="/bookings" 
-                  className="text-[#8B9DC3] hover:text-[#3FFFD9] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
-                  onClick={closeMobileMenu}
-                >
+                <Link href="/bookings" className="text-[#94A3B8] hover:text-[#F5B700] font-medium transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1E293B]" onClick={closeMobileMenu}>
                   My Bookings
                 </Link>
               )}
               {user?.role === 'admin' && (
-                <Link 
-                  href="/admin" 
-                  className="text-[#3FFFD9] font-semibold hover:text-[#5BFFD9] transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1C2541]"
-                  onClick={closeMobileMenu}
-                >
+                <Link href="/admin" className="text-[#F5B700] font-semibold hover:text-[#FFC933] transition-colors px-3 py-2.5 rounded-lg hover:bg-[#1E293B]" onClick={closeMobileMenu}>
                   Admin
                 </Link>
               )}
               
               {!loading && (
-                <div className="pt-3 mt-2 border-t border-[#1C2541] space-y-2">
+                <div className="pt-3 mt-2 border-t border-[#1E293B] space-y-2">
                   {user ? (
                     <>
-                      <div className="px-3 py-1.5 text-sm text-[#8B9DC3]">
+                      <div className="px-3 py-1.5 text-sm text-[#94A3B8]">
                         Signed in as <span className="font-semibold text-[#F8FAFC]">{user.name}</span>
                       </div>
                       <Link href="/book" onClick={closeMobileMenu}>

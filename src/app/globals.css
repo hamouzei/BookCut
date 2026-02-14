@@ -1,25 +1,31 @@
 @import "tailwindcss";
 
 /* ============================================
-   🚀 BookCut - Modern SaaS Design System
-   Midnight Navy | Neon Teal | Cloud White
+   🔥 BookCut - Classic Barber + Tech
+   Charcoal Black | Electric Gold | Soft Gray
    ============================================ */
 
 :root {
   /* Brand Colors */
-  --color-primary: #3FFFD9;         /* Neon Teal */
-  --color-primary-dark: #2de6c1;    /* Neon Teal darker */
-  --color-primary-glow: rgba(63, 255, 217, 0.15); /* Teal glow */
-  --color-secondary: #0B132B;       /* Midnight Navy */
-  --color-secondary-light: #1C2541; /* Navy lighter */
-  --color-accent: #5BFFD9;          /* Teal light */
-  
+  --color-primary: #F5B700;
+  /* Electric Gold */
+  --color-primary-dark: #D9A200;
+  /* Gold darker */
+  --color-primary-glow: rgba(245, 183, 0, 0.15);
+  /* Gold glow */
+  --color-secondary: #0F172A;
+  /* Charcoal Black */
+  --color-secondary-light: #1E293B;
+  /* Charcoal lighter */
+  --color-accent: #FFC933;
+  /* Gold light */
+
   /* Neutral Colors */
-  --background: #F8FAFC;            /* Cloud White */
-  --foreground: #0B132B;            /* Midnight Navy */
-  --muted: #6B7A99;                 /* Muted blue-grey */
-  --border: #E2E8F0;                /* Light border */
-  
+  --background: #F8FAFC;
+  --foreground: #0F172A;
+  --muted: #94A3B8;
+  --border: #E5E7EB;
+
   /* Semantic Colors */
   --success: #10b981;
   --warning: #FBBF24;
@@ -37,10 +43,10 @@
 /* Dark mode support */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0B132B;
+    --background: #0F172A;
     --foreground: #F8FAFC;
-    --border: #1C2541;
-    --muted: #8B9DC3;
+    --border: #1E293B;
+    --muted: #94A3B8;
   }
 }
 
@@ -64,58 +70,82 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1C2541;
+  background: #1E293B;
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #3FFFD9;
+  background: #F5B700;
 }
 
 /* Focus States */
 *:focus-visible {
-  outline: 2px solid #3FFFD9;
+  outline: 2px solid #F5B700;
   outline-offset: 2px;
 }
 
 /* Link Styles */
 a {
-  color: #3FFFD9;
+  color: #F5B700;
   text-decoration: none;
   transition: color 0.2s ease;
 }
 
 a:hover {
-  color: #5BFFD9;
+  color: #FFC933;
 }
 
 /* Selection */
 ::selection {
-  background: #3FFFD9;
-  color: #0B132B;
+  background: #F5B700;
+  color: #0F172A;
 }
 
-/* Glow animation for CTAs */
-@keyframes teal-pulse {
-  0%, 100% { box-shadow: 0 0 20px rgba(63, 255, 217, 0.15); }
-  50% { box-shadow: 0 0 30px rgba(63, 255, 217, 0.3); }
+/* Gold glow animation for CTAs */
+@keyframes gold-pulse {
+
+  0%,
+  100% {
+    box-shadow: 0 0 20px rgba(245, 183, 0, 0.15);
+  }
+
+  50% {
+    box-shadow: 0 0 35px rgba(245, 183, 0, 0.3);
+  }
 }
 
-.glow-teal {
-  animation: teal-pulse 2s ease-in-out infinite;
+.glow-gold {
+  animation: gold-pulse 2.5s ease-in-out infinite;
 }
 
-/* Glassmorphism utility */
+/* Subtle shimmer on hover */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer-hover:hover {
+  background: linear-gradient(90deg, transparent 0%, rgba(245, 183, 0, 0.06) 50%, transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s ease-in-out;
+}
+
+/* Glass effect */
 .glass {
-  background: rgba(11, 19, 43, 0.6);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(63, 255, 217, 0.1);
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(245, 183, 0, 0.1);
 }
 
 .glass-light {
-  background: rgba(248, 250, 252, 0.8);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(11, 19, 43, 0.08);
+  background: rgba(248, 250, 252, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(15, 23, 42, 0.06);
 }

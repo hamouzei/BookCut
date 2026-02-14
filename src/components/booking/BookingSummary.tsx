@@ -35,39 +35,39 @@ export function BookingSummary({ serviceId, date, time, onConfirm, isSubmitting 
     fetchService();
   }, [serviceId]);
 
-  if (isLoading) return <div>Loading summary...</div>;
-  if (!service) return <div className="text-red-500">Service not found</div>;
+  if (isLoading) return <div className="text-[#94A3B8]">Loading summary...</div>;
+  if (!service) return <div className="text-red-400">Service not found</div>;
 
   return (
     <div className="space-y-6">
-      <div className="bg-slate-50 p-6 rounded-xl border border-slate-100">
-        <h3 className="font-semibold text-lg mb-4 text-slate-900 border-b pb-2">Booking Details</h3>
+      <div className="bg-[#0F172A] p-6 rounded-xl border border-[#1E293B]">
+        <h3 className="font-semibold text-lg mb-4 text-[#F8FAFC] border-b border-[#1E293B] pb-2">Booking Details</h3>
         
         <div className="space-y-3">
           <div className="flex justify-between">
-            <span className="text-slate-500">Service</span>
-            <span className="font-medium text-slate-900">{service.name}</span>
+            <span className="text-[#94A3B8]">Service</span>
+            <span className="font-medium text-[#F8FAFC]">{service.name}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-500">Date</span>
-            <span className="font-medium text-slate-900">{format(date, 'MMMM d, yyyy')}</span>
+            <span className="text-[#94A3B8]">Date</span>
+            <span className="font-medium text-[#F8FAFC]">{format(date, 'MMMM d, yyyy')}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-500">Time</span>
-            <span className="font-medium text-slate-900">{time}</span>
+            <span className="text-[#94A3B8]">Time</span>
+            <span className="font-medium text-[#F8FAFC]">{time}</span>
           </div>
           <div className="flex justify-between">
-            <span className="text-slate-500">Duration</span>
-            <span className="font-medium text-slate-900">{service.duration} mins</span>
+            <span className="text-[#94A3B8]">Duration</span>
+            <span className="font-medium text-[#F8FAFC]">{service.duration} mins</span>
           </div>
-          <div className="pt-3 border-t flex justify-between items-center">
-            <span className="text-slate-500">Total Price</span>
-            <span className="font-bold text-xl text-amber-600">${service.price}</span>
+          <div className="pt-3 border-t border-[#1E293B] flex justify-between items-center">
+            <span className="text-[#94A3B8]">Total Price</span>
+            <span className="font-bold text-xl text-[#F5B700]">${service.price}</span>
           </div>
         </div>
       </div>
 
-      <div className="text-sm text-slate-500 text-center">
+      <div className="text-sm text-[#64748B] text-center">
         Please review your booking details before confirming.
       </div>
     </div>

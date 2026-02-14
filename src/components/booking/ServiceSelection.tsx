@@ -33,8 +33,8 @@ export function ServiceSelection({ selectedId, onSelect }: ServiceSelectionProps
     fetchServices();
   }, []);
 
-  if (isLoading) return <div className="text-center py-8">Loading services...</div>;
-  if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
+  if (isLoading) return <div className="text-center py-8 text-[#94A3B8]">Loading services...</div>;
+  if (error) return <div className="text-center py-8 text-red-400">{error}</div>;
 
   return (
     <div className="grid gap-4 sm:grid-cols-2">
@@ -42,19 +42,19 @@ export function ServiceSelection({ selectedId, onSelect }: ServiceSelectionProps
         <div
           key={service.id}
           className={`
-            relative p-4 rounded-xl border-2 cursor-pointer transition-all hover:shadow-md
+            relative p-4 rounded-xl border-2 cursor-pointer transition-all
             ${selectedId === service.id 
-              ? 'border-amber-500 bg-amber-50' 
-              : 'border-slate-100 hover:border-amber-200 bg-white'}
+              ? 'border-[#F5B700] bg-[#F5B700]/5' 
+              : 'border-[#1E293B] hover:border-[#F5B700]/40 bg-[#1E293B]/40'}
           `}
           onClick={() => onSelect(service)}
         >
           <div className="flex justify-between items-start mb-2">
-            <h3 className="font-semibold text-slate-900">{service.name}</h3>
-            <span className="font-medium text-amber-600">${service.price}</span>
+            <h3 className="font-semibold text-[#F8FAFC]">{service.name}</h3>
+            <span className="font-medium text-[#F5B700]">${service.price}</span>
           </div>
-          <p className="text-sm text-slate-500 mb-3 line-clamp-2">{service.description}</p>
-          <div className="flex items-center text-xs text-slate-400">
+          <p className="text-sm text-[#94A3B8] mb-3 line-clamp-2">{service.description}</p>
+          <div className="flex items-center text-xs text-[#64748B]">
             <span className="flex items-center">
               <svg className="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />

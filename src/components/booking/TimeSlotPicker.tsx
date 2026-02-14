@@ -70,9 +70,9 @@ export function TimeSlotPicker({ date, serviceId, barberId, selectedTime, onSele
     }
   }, [date, serviceId, barberId]);
 
-  if (isLoading) return <div className="text-center py-8">Loading available times...</div>;
-  if (error) return <div className="text-center py-8 text-red-500">{error}</div>;
-  if (slots.length === 0) return <div className="text-center py-8 text-slate-500">No slots available for this date.</div>;
+  if (isLoading) return <div className="text-center py-8 text-[#94A3B8]">Loading available times...</div>;
+  if (error) return <div className="text-center py-8 text-red-400">{error}</div>;
+  if (slots.length === 0) return <div className="text-center py-8 text-[#94A3B8]">No slots available for this date.</div>;
 
   return (
     <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3">
@@ -80,7 +80,7 @@ export function TimeSlotPicker({ date, serviceId, barberId, selectedTime, onSele
         <Button
           key={time}
           variant={selectedTime === time ? 'primary' : 'outline'}
-          className={selectedTime === time ? 'bg-amber-500 hover:bg-amber-600' : ''}
+          className={selectedTime === time ? 'bg-[#F5B700] hover:bg-[#FFC933]' : 'border-[#1E293B] text-[#94A3B8] hover:border-[#F5B700]/50 hover:text-[#F5B700]'}
           onClick={() => onSelect(time)}
         >
           {time}
