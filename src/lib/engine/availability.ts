@@ -23,15 +23,20 @@ interface AvailabilityResponse {
 export async function calculateAvailability(
   { barberId, date, serviceId }: AvailabilityRequest
 ): Promise<AvailabilityResponse | null> {
-  const requestedDate = new Date(date);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Parse date parts directly to avoid timezone issues
+  const [year, month, day] = date.split('-').map(Number);
+  // Create date at noon to avoid timezone shifts
+  const requestedDate = new Date(year, month - 1, day, 12, 0, 0);
+
+  const now = new Date();
+  const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
 
   // 1. Get Barber Details & Working Hours
   const barber = await getBarberById(barberId);
   if (!barber) return null;
 
-  const dayOfWeek = requestedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const dayOfWeek = dayNames[requestedDate.getDay()];
   const workingHours = barber.workingHours[dayOfWeek];
 
   if (!workingHours || !workingHours.isWorking) {
@@ -93,8 +98,7 @@ export async function calculateAvailability(
 
     // Conflict with Past Time (if today)
     let isPast = false;
-    if (date === today.toISOString().split('T')[0]) {
-      const now = new Date();
+    if (date === todayStr) {
       const currentMinutes = now.getHours() * 60 + now.getMinutes();
       isPast = slotStart <= currentMinutes + 30; // 30 min buffer
     }
@@ -140,12 +144,15 @@ export async function calculateAllBarbersAvailability(
 export async function validateSlotAvailability(
   { barberId, date, startTime, serviceId }: AvailabilityRequest & { startTime: string }
 ): Promise<{ isValid: boolean; error?: string }> {
-  const requestedDate = new Date(date);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  // Parse date parts directly to avoid timezone issues
+  const [year, month, day] = date.split('-').map(Number);
+  const requestedDate = new Date(year, month - 1, day, 12, 0, 0);
+
+  const now = new Date();
+  const todayDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 12, 0, 0);
 
   // 1. Check if date is in the past
-  if (requestedDate < today) {
+  if (requestedDate < todayDate) {
     return { isValid: false, error: 'Cannot book active dates in the past' };
   }
 
@@ -153,7 +160,8 @@ export async function validateSlotAvailability(
   const barber = await getBarberById(barberId);
   if (!barber) return { isValid: false, error: 'Barber not found' };
 
-  const dayOfWeek = requestedDate.toLocaleDateString('en-US', { weekday: 'long' }).toLowerCase();
+  const dayNames = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+  const dayOfWeek = dayNames[requestedDate.getDay()];
   const workingHours = barber.workingHours[dayOfWeek];
 
   if (!workingHours || !workingHours.isWorking) {
